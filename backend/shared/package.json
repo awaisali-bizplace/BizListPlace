@@ -1,0 +1,20 @@
+{
+  "name": "@bizlistplace/shared",
+  "version": "1.0.0",
+  "description": "Shared schemas, types, and constants for Biz List Place",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.3"
+  },
+  "optionalDependencies": {
+    "@rollup/rollup-linux-x64-gnu": "^4.67.5"
+  }
+}

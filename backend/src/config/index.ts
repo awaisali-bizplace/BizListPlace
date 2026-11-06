@@ -1,0 +1,58 @@
+import dotenv from 'dotenv';
+import path from 'path';
+
+// Load .env from root or apps/api
+dotenv.config({ path: path.resolve(__dirname, '../../.env') });
+dotenv.config({ path: path.resolve(__dirname, '../../../.env') });
+dotenv.config();
+
+export const config = {
+  env: process.env.NODE_ENV || 'development',
+  isProduction: process.env.NODE_ENV === 'production',
+  port: parseInt(process.env.PORT || '5000', 10),
+  apiUrl: process.env.API_URL || 'http://localhost:5000',
+  clientUrl: process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000',
+  mongodb: {
+    uri: process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/bizlistplace',
+    useMemoryDb: process.env.USE_MEMORY_DB !== 'false', // Default to memory-db if local mongo isn't available
+  },
+  jwt: {
+    secret: process.env.JWT_SECRET || 'bizlistplace-super-secret-jwt-key-min-32-chars-long',
+    expiresIn: process.env.JWT_EXPIRES_IN || '7d',
+  },
+  cookie: {
+    secret: process.env.COOKIE_SECRET || 'bizlistplace-super-secret-cookie-salt-min-32',
+    name: 'bizlistplace_session',
+  },
+  rateLimit: {
+    windowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS || '900000', 10), // 15 mins
+    max: parseInt(process.env.RATE_LIMIT_MAX || '300', 10),
+  },
+  email: {
+    smtpHost: process.env.SMTP_HOST || 'smtp.gmail.com',
+    smtpPort: parseInt(process.env.SMTP_PORT || '587', 10),
+    smtpSecure: process.env.SMTP_SECURE === 'true' || process.env.SMTP_PORT === '465',
+    smtpUser: process.env.SMTP_USER || 'bizlistplaceofficial@gmail.com',
+    smtpPass: process.env.SMTP_PASS || '',
+    fromName: process.env.SMTP_FROM_NAME || 'Biz List Place',
+    fromEmail: process.env.SMTP_FROM_EMAIL || process.env.SMTP_USER || 'bizlistplaceofficial@gmail.com',
+    adminEmail: process.env.ADMIN_EMAIL || 'bizlistplaceofficial@gmail.com',
+  },
+  // Image uploads (Cloudinary) — optional. Empty = uploads disabled, the
+  // frontend falls back to image URLs. Supply your own keys, never the
+  // zip owner's.
+  cloudinary: {
+    cloudName: process.env.CLOUDINARY_CLOUD_NAME || '',
+    apiKey: process.env.CLOUDINARY_API_KEY || '',
+    apiSecret: process.env.CLOUDINARY_API_SECRET || '',
+  },
+  // Payment defaults — only used when the admin has not set fees in the
+  // admin panel. All 0 / off by default; no account numbers here.
+  payments: {
+    enabled: process.env.PAYMENTS_ENABLED === 'true',
+    feePkr: parseInt(process.env.PAYMENT_FEE_PKR || '0', 10),
+    feeAed: parseInt(process.env.PAYMENT_FEE_AED || '0', 10),
+    feeUsd: parseInt(process.env.PAYMENT_FEE_USD || '0', 10),
+  },
+  whatsappNumber: process.env.WHATSAPP_NUMBER || '',
+};

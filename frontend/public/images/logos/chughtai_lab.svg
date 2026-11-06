@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="100%" height="100%">
+  <circle cx="100" cy="100" r="88" fill="#F0FDF4" stroke="#16A34A" stroke-width="4"/>
+  <!-- Medical Cross / Microscope Flask -->
+  <path d="M90 60 L110 60 L110 80 L130 80 L130 100 L110 100 L110 120 L90 120 L90 100 L70 100 L70 80 L90 80 Z" fill="#16A34A"/>
+  <circle cx="100" cy="90" r="6" fill="#FFFFFF"/>
+  <text x="100" y="154" font-family="Arial, sans-serif" font-size="13" font-weight="900" fill="#14532D" text-anchor="middle" letter-spacing="0.5">CHUGHTAI LAB</text>
+</svg>

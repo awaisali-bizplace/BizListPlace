@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 350" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F8FAFC"/>
+      <stop offset="100%" stop-color="#E2E8F0"/>
+    </linearGradient>
+  </defs>
+  <rect width="600" height="350" fill="url(#bgGrad)"/>
+  
+  <!-- Crimson Shield on Left -->
+  <g transform="translate(40, 60)">
+    <path d="M0 0 L100 0 C100 65 100 95 50 140 C0 95 0 65 0 0 Z" fill="#A51C30"/>
+    <!-- Books inside shield -->
+    <rect x="25" y="22" width="50" height="25" rx="3" fill="#FFFFFF"/>
+    <text x="50" y="38" font-family="Times New Roman, serif" font-size="12" font-weight="bold" fill="#A51C30" text-anchor="middle">VE</text>
+    
+    <rect x="15" y="55" width="40" height="24" rx="3" fill="#FFFFFF"/>
+    <text x="35" y="71" font-family="Times New Roman, serif" font-size="11" font-weight="bold" fill="#A51C30" text-anchor="middle">RI</text>
+    
+    <rect x="45" y="85" width="40" height="24" rx="3" fill="#FFFFFF"/>
+    <text x="65" y="101" font-family="Times New Roman, serif" font-size="11" font-weight="bold" fill="#A51C30" text-anchor="middle">TAS</text>
+  </g>
+  
+  <!-- HARVARD UNIVERSITY Typography -->
+  <text x="175" y="130" font-family="Times New Roman, Georgia, serif" font-size="48" font-weight="bold" fill="#1E293B" letter-spacing="4">HARVARD</text>
+  <text x="178" y="178" font-family="Times New Roman, Georgia, serif" font-size="28" font-weight="normal" fill="#475569" letter-spacing="6">UNIVERSITY</text>
+</svg>

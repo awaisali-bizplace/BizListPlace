@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="100%" height="100%">
+  <defs>
+    <radialGradient id="sunGlow" cx="50%" cy="40%" r="50%">
+      <stop offset="0%" stop-color="#FEF08A" stop-opacity="0.9"/>
+      <stop offset="60%" stop-color="#FDE047" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#F59E0B" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <!-- Circular Glow -->
+  <circle cx="100" cy="95" r="80" fill="url(#sunGlow)"/>
+  
+  <!-- Sun Rays Arcs -->
+  <path d="M 60 70 A 50 50 0 0 1 140 70" fill="none" stroke="#F59E0B" stroke-width="6" stroke-linecap="round" opacity="0.8"/>
+  <path d="M 72 56 A 40 40 0 0 1 128 56" fill="none" stroke="#FBBF24" stroke-width="4" stroke-linecap="round"/>
+
+  <!-- Light Bulb Base -->
+  <path d="M84 125 L116 125 L112 145 L88 145 Z" fill="#94A3B8"/>
+  <rect x="91" y="146" width="18" height="6" rx="2" fill="#64748B"/>
+  <path d="M95 152 Q100 156 105 152" stroke="#475569" stroke-width="3" fill="none"/>
+
+  <!-- Solar PV Panels Grid Shape -->
+  <g transform="translate(100, 95) scale(0.9) translate(-100, -95)">
+    <!-- Blue Solar Panels Grid -->
+    <polygon points="68,90 94,68 94,92 68,110" fill="#0284C7" stroke="#FFFFFF" stroke-width="1.8"/>
+    <polygon points="98,68 124,90 124,110 98,92" fill="#0369A1" stroke="#FFFFFF" stroke-width="1.8"/>
+    <polygon points="76,68 96,52 118,52 138,68 116,84 96,84" fill="#38BDF8" stroke="#FFFFFF" stroke-width="1.8"/>
+    <!-- Solar Cell Grid Lines -->
+    <line x1="90" y1="58" x2="114" y2="76" stroke="#FFFFFF" stroke-width="1.2" opacity="0.8"/>
+    <line x1="104" y1="53" x2="128" y2="71" stroke="#FFFFFF" stroke-width="1.2" opacity="0.8"/>
+    <line x1="82" y1="78" x2="82" y2="100" stroke="#FFFFFF" stroke-width="1.2" opacity="0.8"/>
+    <line x1="110" y1="78" x2="110" y2="100" stroke="#FFFFFF" stroke-width="1.2" opacity="0.8"/>
+  </g>
+
+  <!-- Green Ecological Leaf sprout -->
+  <path d="M112 120 C128 115, 140 102, 136 88 C122 88, 114 104, 112 120 Z" fill="#16A34A"/>
+  <path d="M114 116 C122 106, 128 100, 134 94" stroke="#86EFAC" stroke-width="1.5" fill="none"/>
+</svg>

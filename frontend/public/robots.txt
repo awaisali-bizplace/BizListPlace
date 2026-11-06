@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /dashboard/
+Disallow: /api/
+Disallow: /reset-password
+Disallow: /forgot-password
+
+Sitemap: https://bizpockethub.com/sitemap.xml

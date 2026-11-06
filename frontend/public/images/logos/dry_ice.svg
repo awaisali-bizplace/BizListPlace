@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="100%" height="100%">
+  <defs>
+    <radialGradient id="iceBg" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="70%" stop-color="#E0F2FE"/>
+      <stop offset="100%" stop-color="#BAE6FD"/>
+    </radialGradient>
+    <linearGradient id="iceGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#0284C7"/>
+      <stop offset="50%" stop-color="#0369A1"/>
+      <stop offset="100%" stop-color="#075985"/>
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#0284C7" flood-opacity="0.3"/>
+    </filter>
+  </defs>
+  <circle cx="100" cy="100" r="92" fill="url(#iceBg)" stroke="#38BDF8" stroke-width="4"/>
+  <!-- Frost cubes -->
+  <rect x="75" y="42" width="50" height="40" rx="8" fill="#7DD3FC" opacity="0.4" transform="rotate(15 100 62)"/>
+  <rect x="70" y="48" width="46" height="38" rx="8" fill="#38BDF8" opacity="0.6" transform="rotate(-8 93 67)"/>
+  <!-- Skyline / Ice crystals -->
+  <path d="M60 85 L75 70 L90 85 L100 65 L110 85 L125 70 L140 85 Z" fill="#0284C7" opacity="0.35"/>
+  <!-- 3D style Text DRY ICE -->
+  <text x="100" y="112" font-family="Impact, Arial Black, sans-serif" font-size="28" font-weight="900" fill="#0369A1" text-anchor="middle" letter-spacing="1.5" filter="url(#shadow)">DRY ICE</text>
+  <!-- PAKISTAN Banner -->
+  <rect x="52" y="122" width="96" height="20" rx="4" fill="#0284C7"/>
+  <text x="100" y="136" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="bold" fill="#FFFFFF" text-anchor="middle" letter-spacing="2">PAKISTAN</text>
+  <!-- URL Subtext -->
+  <text x="100" y="154" font-family="Arial, sans-serif" font-size="8" font-weight="600" fill="#0369A1" text-anchor="middle" opacity="0.8">www.dryice.pk</text>
+</svg>
