@@ -104,7 +104,7 @@ export function PaymentSettingsManager() {
 
   if (loading) {
     return (
-      <div className="bg-white rounded-3xl border border-slate-200/90 p-8 text-center text-xs text-slate-500">
+      <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-8 text-center text-xs text-slate-500">
         <Loader2 className="w-6 h-6 animate-spin mx-auto mb-2" /> Loading payment settings…
       </div>
     );
@@ -113,93 +113,211 @@ export function PaymentSettingsManager() {
   const methods: IPaymentMethod[] = settings?.paymentMethods || [];
 
   return (
-    <div className="bg-white rounded-3xl border border-slate-200/90 shadow-[0_2px_12px_rgba(0,0,0,0.03)] p-5 sm:p-6 space-y-5">
-      <div className="border-b border-slate-100 pb-3">
-        <h4 className="font-bold text-sm text-slate-900 flex items-center gap-2">
-          <CreditCard className="w-4 h-4 text-emerald-600" />
-          <span>Payment Methods &amp; Per-Country Fees</span>
-        </h4>
-        <p className="text-xs text-slate-500 mt-0.5">
-          Add the accounts listing owners pay to (for example JazzCash, Easypaisa or a bank account).
-          Nothing is pre-filled — add only your own accounts. When payments are off, listings are free.
-        </p>
+    <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 sm:p-6 space-y-5">
+      <div className="border-b border-slate-100 pb-3 flex flex-col sm:flex-row sm:items-start justify-between gap-3">
+        <div>
+          <h4 className="font-bold text-sm text-slate-900 flex items-center gap-2 flex-wrap">
+            <CreditCard className="w-4 h-4 text-[#1D68F2]" />
+            <span>Payment Methods &amp; Per-Country Fees</span>
+            <span className="px-2 py-0.5 rounded-full bg-blue-50 text-[#1D68F2] text-[11px] font-bold">
+              {methods.length}
+            </span>
+          </h4>
+          <p className="text-xs text-slate-500 mt-0.5">
+            Add the accounts listing owners pay to (for example JazzCash, Easypaisa or a bank account).
+            Nothing is pre-filled — add only your own accounts. When payments are off, listings are free.
+          </p>
+        </div>
+        <button
+          type="button"
+          onClick={save}
+          disabled={saving}
+          className="px-5 py-2.5 rounded-xl bg-[#1D68F2] hover:bg-[#1557D0] text-white font-bold text-xs shadow-sm transition-colors flex items-center gap-2 disabled:opacity-50 shrink-0"
+        >
+          {saving && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
+          <span>Save Fees &amp; Instructions</span>
+        </button>
       </div>
 
       {message && <p className="text-xs font-semibold text-slate-700 bg-slate-50 border border-slate-200 rounded-xl px-3 py-2">{message}</p>}
 
-      <label className="flex items-start gap-3 p-3.5 rounded-2xl bg-slate-50/80 border border-slate-200/80 cursor-pointer">
-        <input type="checkbox" checked={enabled} onChange={(e) => setEnabled(e.target.checked)} className="mt-0.5 w-4 h-4 rounded text-[#1D68F2] border-slate-300" />
-        <span>
-          <span className="font-bold text-xs text-slate-900 block">Enable listing fee requirement</span>
-          <span className="text-[11px] text-slate-500">When enabled, approval is blocked until the receipt is verified and covers the fee.</span>
-        </span>
-      </label>
-
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        {FEE_COUNTRIES.map((country) => (
-          <div key={country} className="space-y-1.5">
-            <label className="text-xs font-bold text-slate-700 block">
-              Fee — {country} ({country === 'Pakistan' ? 'PKR' : country === 'UAE' ? 'AED' : 'USD'})
-            </label>
-            <input
-              type="number"
-              min="0"
-              value={fees[country]}
-              onChange={(e) => setFees((prev) => ({ ...prev, [country]: e.target.value }))}
-              className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs font-mono font-bold focus:outline-hidden focus:ring-2 focus:ring-[#1D68F2]/20 focus:border-[#1D68F2] bg-white"
-            />
-            <p className="text-[11px] text-slate-400">0 = free for this country</p>
+      {/* Payment requirement banner */}
+      <div className={`p-4 rounded-2xl border space-y-3 ${enabled ? 'bg-emerald-50/60 border-emerald-200' : 'bg-slate-50 border-slate-200'}`}>
+        <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
+          <div>
+            <h5 className="font-bold text-sm text-slate-900 flex items-center gap-2 flex-wrap">
+              <CreditCard className="w-4 h-4 text-[#1D68F2]" />
+              <span>Directory Listing Payment Requirement</span>
+              <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${enabled ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-200 text-slate-700'}`}>
+                {enabled ? 'ENABLED / ON' : 'DISABLED / OFF'}
+              </span>
+            </h5>
+            <p className="text-xs text-slate-500 mt-1">
+              {enabled
+                ? 'Payment is required: approval is blocked until the receipt is verified and covers the fee.'
+                : 'Currently OFF: Business submissions are 100% FREE. No payment or receipt screenshot is required.'}
+            </p>
           </div>
-        ))}
+          <button
+            type="button"
+            onClick={() => setEnabled((prev) => !prev)}
+            className="px-4 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs shadow-sm transition-colors shrink-0 cursor-pointer"
+          >
+            {enabled ? 'Turn Payment OFF' : 'Turn Payment ON'}
+          </button>
+        </div>
+        <p className="text-[11px] text-slate-500">
+          Use the Save button above to apply this change.
+        </p>
+      </div>
+
+      {/* Per-country fees */}
+      <div className="space-y-3">
+        {FEE_COUNTRIES.map((country) => {
+          const code = country === 'Pakistan' ? 'PK' : country === 'UAE' ? 'AE' : 'US';
+          const currencyLabel =
+            country === 'Pakistan' ? 'PKR (Rs.)' : country === 'UAE' ? 'AED' : 'USD ($)';
+          const currencyCode = country === 'Pakistan' ? 'PKR' : country === 'UAE' ? 'AED' : 'USD';
+          const symbol = country === 'Pakistan' ? 'Rs.' : country === 'UAE' ? 'AED' : '$';
+          return (
+            <div
+              key={country}
+              className="flex flex-col sm:flex-row sm:items-center gap-3 p-3.5 rounded-xl border border-slate-200 bg-white"
+            >
+              <div className="flex items-center gap-3 flex-1 min-w-0">
+                <div className="w-10 h-10 rounded-full bg-emerald-600 text-white text-xs font-black flex items-center justify-center shrink-0">
+                  {code}
+                </div>
+                <div className="min-w-0">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className="font-bold text-sm text-slate-900">{country}</span>
+                    <span className="px-2 py-0.5 rounded-full bg-blue-50 text-[#1D68F2] text-[11px] font-bold">
+                      {symbol} {fees[country]}
+                    </span>
+                  </div>
+                  <div className="text-[11px] text-slate-400">Fixed Currency: {currencyLabel}</div>
+                </div>
+              </div>
+              <div className="flex items-center gap-2">
+                <input
+                  type="number"
+                  min="0"
+                  value={fees[country]}
+                  onChange={(e) => setFees((prev) => ({ ...prev, [country]: e.target.value }))}
+                  aria-label={`Listing fee for ${country}`}
+                  className="w-24 px-3 py-2 rounded-xl border border-slate-200 text-xs font-mono font-bold focus:outline-hidden focus:ring-2 focus:ring-[#1D68F2]/20 focus:border-[#1D68F2] bg-white text-right"
+                />
+                <span className="text-xs font-bold text-slate-500 w-8">{currencyCode}</span>
+                <button
+                  type="button"
+                  onClick={() => setFees((prev) => ({ ...prev, [country]: '0' }))}
+                  className="px-3 py-2 rounded-xl border border-slate-200 text-xs font-bold text-slate-700 hover:bg-slate-50 transition-colors cursor-pointer"
+                >
+                  Set FREE
+                </button>
+              </div>
+            </div>
+          );
+        })}
+        <div className="p-3.5 rounded-xl bg-amber-50 border border-amber-200/70 text-xs text-amber-900">
+          <strong>Multi-Country Pricing:</strong> Set the fee to <strong>0</strong> for any country to make
+          listings 100% FREE for that country.
+        </div>
       </div>
 
       <div className="space-y-1.5">
-        <label className="text-xs font-bold text-slate-700 block">Payment instructions shown to listing owners</label>
+        <h5 className="font-bold text-sm text-slate-900">Payment Instructions for Users</h5>
+        <p className="text-xs text-slate-500">
+          These instructions are displayed to users on the submission and claim verification pages.
+        </p>
         <textarea
           rows={3}
           value={instructions}
           onChange={(e) => setInstructions(e.target.value)}
           placeholder="e.g. Send the fee to one of the accounts below and paste your receipt link in the form."
+          aria-label="Payment instructions shown to listing owners"
           className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs font-medium focus:outline-hidden focus:ring-2 focus:ring-[#1D68F2]/20 focus:border-[#1D68F2] bg-white"
         />
       </div>
 
-      <button
-        type="button"
-        onClick={save}
-        disabled={saving}
-        className="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-xs transition-colors flex items-center gap-2 disabled:opacity-50"
-      >
-        {saving && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
-        <span>Save Fees &amp; Instructions</span>
-      </button>
-
       <div className="space-y-3 pt-2">
-        <h5 className="font-bold text-xs text-slate-900">Payment methods ({methods.length})</h5>
+        <h5 className="font-bold text-sm text-slate-900 flex items-center gap-2 flex-wrap">
+          <CreditCard className="w-4 h-4 text-[#1D68F2]" />
+          <span>Custom Payment Methods &amp; Bank Accounts</span>
+          <span className="px-2 py-0.5 rounded-full bg-blue-50 text-[#1D68F2] text-[11px] font-bold">
+            {methods.length}
+          </span>
+        </h5>
+        <p className="text-xs text-slate-500">
+          Add branded bank cards (Meezan, SadaPay, NayaPay, JazzCash, Easypaisa, etc.) with custom
+          IBAN/number details.
+        </p>
         {methods.length === 0 && (
           <p className="text-xs text-slate-500">No payment methods yet. Add your first one below — for example JazzCash, Easypaisa or a bank account.</p>
         )}
-        {methods.map((m) => (
-          <div key={m._id} className="border border-slate-200 rounded-2xl p-4 flex items-start justify-between gap-3">
-            <div className="text-xs space-y-1 min-w-0">
-              <div className="font-bold text-slate-900 text-sm">{m.name}</div>
-              <div className="text-slate-600">Account title: {m.accountTitle}</div>
-              <div className="text-slate-600">
-                {m.kind === 'iban' ? 'IBAN' : 'Account number'}: <span className="font-mono font-semibold text-slate-900">{m.accountValue}</span>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {methods.map((m) => (
+            <div key={m._id} className="border border-slate-200 rounded-2xl p-4 space-y-3 bg-white">
+              <div className="flex items-start justify-between gap-3">
+                <div className="flex items-center gap-3 min-w-0">
+                  <div className="w-10 h-10 rounded-xl bg-slate-900 text-white flex items-center justify-center shrink-0">
+                    <CreditCard className="w-5 h-5" />
+                  </div>
+                  <div className="min-w-0">
+                    <div className="font-bold text-slate-900 text-sm truncate">{m.name}</div>
+                    <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                      {m.kind === 'iban' ? 'IBAN Account' : 'Account Number'}
+                    </div>
+                  </div>
+                </div>
+                <span
+                  className={`px-2 py-0.5 rounded-full text-[10px] font-bold shrink-0 border ${
+                    m.isEnabled
+                      ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                      : 'bg-slate-100 text-slate-500 border-slate-200'
+                  }`}
+                >
+                  {m.isEnabled ? 'Enabled' : 'Disabled'}
+                </span>
               </div>
-              {m.details && <div className="text-slate-500">{m.details}</div>}
-              <div className="text-slate-400">{m.isEnabled ? 'Enabled' : 'Disabled'} · {m.countries?.join(', ') || 'Pakistan'}</div>
+              <div className="space-y-1.5 p-3 rounded-xl bg-slate-50 text-xs">
+                <div className="flex justify-between gap-3">
+                  <span className="text-slate-500 shrink-0">Title:</span>
+                  <span className="font-bold text-slate-900 text-right break-words">{m.accountTitle}</span>
+                </div>
+                <div className="flex justify-between gap-3">
+                  <span className="text-slate-500 shrink-0">{m.kind === 'iban' ? 'IBAN:' : 'Number:'}</span>
+                  <span className="font-mono font-semibold text-slate-900 text-right break-all">{m.accountValue}</span>
+                </div>
+                {m.details && <div className="text-slate-500 pt-1.5 border-t border-slate-200/70">{m.details}</div>}
+              </div>
+              <div className="flex flex-wrap gap-1.5">
+                {(m.countries?.length ? m.countries : ['Pakistan']).map((c) => (
+                  <span key={c} className="px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 text-[10px] font-bold">
+                    {c}
+                  </span>
+                ))}
+              </div>
+              <div className="flex items-center justify-between pt-1 border-t border-slate-100">
+                <button
+                  type="button"
+                  onClick={() => toggleMethod(m._id!)}
+                  className="px-3 py-1.5 rounded-lg text-xs font-bold text-slate-700 hover:bg-slate-100 cursor-pointer"
+                >
+                  {m.isEnabled ? 'Disable' : 'Enable'}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => deleteMethod(m._id!)}
+                  title="Delete payment method"
+                  className="p-1.5 rounded-lg text-rose-600 hover:bg-rose-50 cursor-pointer flex items-center gap-1"
+                >
+                  <Trash2 className="w-4 h-4" />
+                </button>
+              </div>
             </div>
-            <div className="flex gap-2 shrink-0">
-              <button type="button" onClick={() => toggleMethod(m._id!)} className="px-3 py-1.5 rounded-lg border border-slate-200 text-xs font-bold text-slate-700 hover:bg-slate-50">
-                {m.isEnabled ? 'Disable' : 'Enable'}
-              </button>
-              <button type="button" onClick={() => deleteMethod(m._id!)} className="px-3 py-1.5 rounded-lg border border-red-200 text-xs font-bold text-red-600 hover:bg-red-50 flex items-center gap-1">
-                <Trash2 className="w-3.5 h-3.5" /> Delete
-              </button>
-            </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
 
       <form onSubmit={addMethod} className="border-t border-slate-100 pt-4 space-y-3">

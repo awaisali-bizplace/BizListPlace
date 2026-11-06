@@ -19,12 +19,12 @@ import {
 import { Badge } from '@/components/ui/Badge';
 import { PaymentSettingsManager } from '@/components/admin/PaymentSettingsManager';
 import {
-  Shield,
   LayoutDashboard,
   Building2,
   Users,
   CreditCard,
   Star,
+  Store,
   FileCheck2,
   Mail,
   History,
@@ -48,6 +48,7 @@ import {
   Check,
   Download,
   BarChart3,
+  Calendar,
   Globe,
   ArrowRight,
   Menu,
@@ -205,11 +206,11 @@ type AdminTab =
 
 const SIDEBAR_NAV_ITEMS = [
   { id: 'dashboard' as const, label: 'Dashboard', icon: LayoutDashboard },
-  { id: 'businesses' as const, label: 'Businesses', icon: Building2 },
-  { id: 'users' as const, label: 'Users', icon: Users },
+  { id: 'businesses' as const, label: 'All Businesses', icon: Building2 },
   { id: 'payments' as const, label: 'Payments', icon: CreditCard },
   { id: 'reviews' as const, label: 'Reviews', icon: Star },
-  { id: 'claims' as const, label: 'Claims', icon: FileCheck2 },
+  { id: 'claims' as const, label: 'Claim Requests', icon: FileCheck2 },
+  { id: 'users' as const, label: 'Users', icon: Users },
   { id: 'emails' as const, label: 'Emails', icon: Mail },
   { id: 'activity' as const, label: 'Activity', icon: History },
   { id: 'reports' as const, label: 'Reports', icon: BarChart3 },
@@ -1260,7 +1261,7 @@ export default function AdminDashboardPage() {
   if (!user || user.role !== 'admin') {
     return (
       <div className="min-h-[550px] flex items-center justify-center p-6 text-center">
-        <div className="max-w-md w-full bg-white border border-slate-200/90 rounded-3xl p-8 shadow-sm space-y-4">
+        <div className="max-w-md w-full bg-white border border-slate-200/90 rounded-2xl p-8 shadow-sm space-y-4">
           <div className="w-14 h-14 rounded-2xl bg-rose-50 text-rose-600 border border-rose-100 flex items-center justify-center mx-auto">
             <ShieldAlert className="w-7 h-7" />
           </div>
@@ -1282,21 +1283,22 @@ export default function AdminDashboardPage() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-4 sm:py-6 lg:py-8 space-y-6 pb-24 md:pb-8 w-full max-w-full overflow-x-hidden">
-      <div className="md:grid md:grid-cols-[72px_1fr] lg:grid-cols-[240px_1fr] gap-4 lg:gap-6 items-start">
+    <div className="min-h-screen w-full bg-slate-50 pb-24 lg:pb-8 overflow-x-hidden">
+      <div className="mx-auto w-full max-w-[1440px] px-3 sm:px-4 lg:px-6 py-4 sm:py-6 space-y-6">
+      <div className="lg:grid lg:grid-cols-[260px_minmax(0,1fr)] gap-4 lg:gap-6 items-start">
         {/* ========================================================= */}
-        {/* DESKTOP & TABLET SIDEBAR                                  */}
+        {/* DESKTOP SIDEBAR (>= lg)                                    */}
         {/* ========================================================= */}
-        <aside className="hidden md:flex flex-col justify-between bg-white rounded-3xl border border-slate-200/90 shadow-[0_2px_12px_rgba(0,0,0,0.03)] p-2.5 lg:p-4 sticky top-24 min-h-[580px]">
-          <div className="space-y-6">
+        <aside className="hidden lg:flex flex-col justify-between bg-white rounded-2xl border border-slate-200 shadow-sm p-3 sticky top-24 min-h-[600px]">
+          <div className="space-y-5">
             {/* Sidebar Brand Header */}
-            <div className="flex items-center justify-center lg:justify-start gap-3 px-1 lg:px-2 py-2 border-b border-slate-100 pb-4">
-              <div className="w-9 h-9 rounded-xl bg-indigo-50 text-indigo-600 border border-indigo-100 flex items-center justify-center shrink-0" title="Admin Portal">
-                <Shield className="w-4 h-4" />
+            <div className="flex items-center gap-3 px-2 py-2">
+              <div className="w-10 h-10 rounded-xl bg-[#1D68F2] text-white flex items-center justify-center shrink-0 shadow-sm" title="BizListPlace">
+                <Store className="w-5 h-5" />
               </div>
-              <div className="hidden lg:block min-w-0">
-                <h2 className="text-sm font-bold text-slate-900 truncate">Admin Portal</h2>
-                <p className="text-[11px] text-slate-400 font-medium truncate">Directory Governance</p>
+              <div className="min-w-0">
+                <h2 className="text-[15px] font-extrabold text-slate-900 truncate leading-tight">BizListPlace</h2>
+                <p className="text-[11px] text-slate-400 font-medium truncate">Business Directory</p>
               </div>
             </div>
 
@@ -1305,41 +1307,63 @@ export default function AdminDashboardPage() {
               {SIDEBAR_NAV_ITEMS.map((item) => {
                 const Icon = item.icon;
                 const isActive = activeSection === item.id;
+                const badgeCount = item.id === 'reviews' ? reviews.length : null;
                 return (
                   <button
                     key={item.id}
                     type="button"
                     title={item.label}
                     onClick={() => handleSidebarClick(item.id)}
-                    className={`w-full flex items-center justify-center lg:justify-start gap-3 px-2 lg:px-3 py-2.5 rounded-xl text-xs font-bold transition-all text-left cursor-pointer min-h-[44px] ${
+                    className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] font-semibold transition-all text-left cursor-pointer min-h-[44px] ${
                       isActive
-                        ? 'bg-indigo-50 text-indigo-700 shadow-xs'
+                        ? 'bg-[#EBF2FE] text-[#1D68F2] shadow-xs'
                         : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
                     }`}
                   >
-                    <Icon className={`w-4 h-4 shrink-0 ${isActive ? 'text-indigo-600' : 'text-slate-400'}`} />
-                    <span className="hidden lg:inline truncate">{item.label}</span>
+                    <Icon className={`w-[18px] h-[18px] shrink-0 ${isActive ? 'text-[#1D68F2]' : 'text-slate-400'}`} />
+                    <span className="truncate flex-1">{item.label}</span>
+                    {badgeCount !== null && (
+                      <span
+                        className={`px-2 py-0.5 rounded-full text-[11px] font-bold shrink-0 ${
+                          isActive ? 'bg-[#1D68F2] text-white' : 'bg-slate-100 text-slate-500'
+                        }`}
+                      >
+                        {badgeCount}
+                      </span>
+                    )}
                   </button>
                 );
               })}
             </nav>
           </div>
 
-          {/* Bottom Sidebar Action: View Website */}
-          <div className="pt-4 border-t border-slate-100">
+          {/* Bottom Sidebar: Admin Tools + Brand Card */}
+          <div className="pt-4 space-y-3">
+            <p className="px-3 text-[10px] font-bold uppercase tracking-wider text-slate-400">
+              Admin Tools
+            </p>
             <Link
               href="/"
               target="_blank"
               rel="noopener noreferrer"
               title="View Website"
-              className="flex items-center justify-center lg:justify-between px-2 lg:px-3 py-2.5 rounded-xl text-xs font-bold text-slate-600 hover:text-[#1D68F2] hover:bg-blue-50/80 transition-all group min-h-[44px]"
+              className="flex items-center justify-between px-3 py-2.5 rounded-xl text-[13px] font-semibold text-slate-600 hover:text-[#1D68F2] hover:bg-blue-50/80 transition-all group min-h-[44px]"
             >
-              <span className="flex items-center gap-2.5">
-                <ExternalLink className="w-4 h-4 text-slate-400 group-hover:text-[#1D68F2] shrink-0" />
-                <span className="hidden lg:inline">View Website</span>
+              <span className="flex items-center gap-3">
+                <ExternalLink className="w-[18px] h-[18px] text-slate-400 group-hover:text-[#1D68F2] shrink-0" />
+                <span>View Website</span>
               </span>
-              <ArrowUpRight className="hidden lg:inline w-3.5 h-3.5 text-slate-400 group-hover:text-[#1D68F2] shrink-0" />
+              <ArrowUpRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-[#1D68F2] shrink-0" />
             </Link>
+            <div className="flex items-center gap-3 px-3 py-3 rounded-xl bg-[#F1F5FB] border border-slate-200/70">
+              <div className="w-9 h-9 rounded-full bg-[#1D68F2] text-white flex items-center justify-center shrink-0">
+                <Store className="w-4 h-4" />
+              </div>
+              <div className="min-w-0">
+                <div className="text-[13px] font-bold text-slate-900 truncate">BizListPlace</div>
+                <div className="text-[11px] text-slate-500 truncate">Business Directory</div>
+              </div>
+            </div>
           </div>
         </aside>
 
@@ -1347,47 +1371,72 @@ export default function AdminDashboardPage() {
         {/* MAIN ADMIN CONTENT PANE                                   */}
         {/* ========================================================= */}
         <div className="space-y-6 min-w-0">
-          {/* TOP AREA: Admin Name, Role, Refresh & Sign Out */}
-          <header className="bg-white rounded-3xl border border-slate-200/90 shadow-[0_2px_12px_rgba(0,0,0,0.03)] p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-            <div className="flex items-center gap-3">
+          {/* TOP AREA: Greeting, date & admin actions */}
+          <header className="flex flex-col gap-4 xl:flex-row xl:items-start xl:justify-between">
+            <div className="flex items-start gap-3 min-w-0">
               {/* Mobile Hamburger Drawer Trigger */}
               <button
                 type="button"
                 onClick={() => setIsMobileDrawerOpen(true)}
-                className="md:hidden min-h-[44px] min-w-[44px] flex items-center justify-center rounded-2xl border border-slate-200 text-slate-700 hover:bg-slate-50 cursor-pointer shrink-0"
+                className="lg:hidden min-h-[44px] min-w-[44px] flex items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 cursor-pointer shrink-0 shadow-sm"
                 aria-label="Open admin navigation menu"
               >
                 <Menu className="w-5 h-5 text-slate-700" />
               </button>
 
               <div className="min-w-0">
-                <div className="flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shrink-0" />
-                  <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider truncate">
-                    Administrative Session
-                  </span>
-                </div>
-                <h1 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight mt-0.5 truncate">
-                  {activeSection === 'reports'
-                    ? 'Platform Reports & Analytics'
-                    : activeSection === 'settings'
-                    ? 'Platform & Payment Settings'
-                    : 'Moderation & Governance'}
-                </h1>
+                {activeSection === 'reports' || activeSection === 'settings' ? (
+                  <>
+                    <button
+                      type="button"
+                      onClick={() => handleSidebarClick('dashboard')}
+                      className="text-xs font-bold text-[#1D68F2] hover:underline cursor-pointer mb-1"
+                    >
+                      ← Back to Dashboard
+                    </button>
+                    <h1 className="text-2xl sm:text-[28px] font-extrabold text-slate-900 tracking-tight leading-tight">
+                      {activeSection === 'reports'
+                        ? 'Platform Reports & Analytics'
+                        : 'Platform & Payment Settings'}
+                    </h1>
+                    <p className="text-sm text-slate-500 mt-1">
+                      {activeSection === 'reports'
+                        ? 'Live aggregate counts, geographic demographics, categorical breakdown, and pending queue aging.'
+                        : 'Manage directory notification addresses, listing fee requirements, system backups, and quick tools.'}
+                    </p>
+                  </>
+                ) : (
+                  <>
+                    <h1 className="text-2xl sm:text-[28px] font-extrabold text-slate-900 tracking-tight leading-tight">
+                      Welcome back, {user.name?.split(' ')[0] || 'Admin'}! 👋
+                    </h1>
+                    <p className="text-sm text-slate-500 mt-1">
+                      Manage your business directory, users, payments and more — all in one place.
+                    </p>
+                  </>
+                )}
               </div>
             </div>
 
-            <div className="flex flex-wrap items-center gap-2.5 sm:gap-3">
+            <div className="flex flex-wrap items-center gap-2.5">
+              {/* Current Date */}
+              <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-white border border-slate-200 text-xs font-semibold text-slate-600 shadow-sm min-h-[40px]">
+                <Calendar className="w-4 h-4 text-slate-400" />
+                <span>
+                  {new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                </span>
+              </div>
+
               {/* Admin Identity Pill */}
-              <div className="flex items-center gap-2 px-3 py-1.5 rounded-2xl bg-slate-50 border border-slate-200/80 text-xs min-h-[44px]">
-                <div className="w-7 h-7 rounded-xl bg-indigo-600 text-white font-black text-xs flex items-center justify-center shrink-0">
+              <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white border border-slate-200 shadow-sm text-xs min-h-[44px]">
+                <div className="w-7 h-7 rounded-full bg-[#1D68F2] text-white font-black text-xs flex items-center justify-center shrink-0">
                   {user.name?.charAt(0).toUpperCase() || 'A'}
                 </div>
                 <div className="text-left min-w-0">
                   <div className="font-bold text-slate-800 leading-tight truncate max-w-[120px] sm:max-w-[140px]">
                     {user.name}
                   </div>
-                  <span className="inline-block text-[10px] font-black uppercase text-indigo-600 tracking-wider">
+                  <span className="inline-block text-[10px] font-black uppercase text-[#1D68F2] tracking-wider">
                     Administrator
                   </span>
                 </div>
@@ -1400,7 +1449,7 @@ export default function AdminDashboardPage() {
                   onClick={handleDownloadBackup}
                   disabled={isDownloadingBackup}
                   title="Download full JSON database snapshot"
-                  className="px-3 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer disabled:opacity-50 shadow-xs min-h-[44px]"
+                  className="px-3 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer disabled:opacity-50 shadow-sm min-h-[44px]"
                 >
                   {isDownloadingBackup ? (
                     <>
@@ -1422,7 +1471,7 @@ export default function AdminDashboardPage() {
                 onClick={() => loadAdminData(false)}
                 disabled={refreshing}
                 title="Refresh real metrics"
-                className="px-3 py-2 rounded-xl border border-slate-200 text-slate-600 hover:text-slate-900 hover:bg-slate-50 text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer disabled:opacity-50 min-h-[44px]"
+                className="px-3 py-2 rounded-xl border border-slate-200 bg-white text-slate-600 hover:text-slate-900 hover:bg-slate-50 text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer disabled:opacity-50 shadow-sm min-h-[44px]"
               >
                 <RefreshCw className={`w-3.5 h-3.5 ${refreshing ? 'animate-spin text-[#1D68F2]' : ''}`} />
                 <span className="hidden sm:inline">Refresh</span>
@@ -1466,85 +1515,70 @@ export default function AdminDashboardPage() {
           {activeSection !== 'reports' && activeSection !== 'settings' && (
             <>
               {/* 5 Real Stat Cards */}
-              <section className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3.5 sm:gap-4">
+              <section className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-5 gap-3 sm:gap-4">
                 {/* 1. Total Users */}
-                <div className="bg-white rounded-2xl border border-slate-200/90 p-4.5 shadow-xs space-y-2">
-                  <div className="flex items-center justify-between text-slate-500">
-                    <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
-                      Total Users
-                    </span>
-                    <div className="w-8 h-8 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center">
-                      <Users className="w-4 h-4" />
+                <div className="bg-white rounded-xl border border-slate-200 p-4 shadow-sm">
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-9 h-9 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center shrink-0">
+                      <Users className="w-[18px] h-[18px]" />
                     </div>
+                    <span className="text-xs font-semibold text-slate-500 truncate">Total Users</span>
                   </div>
-                  <div className="text-2xl font-black text-slate-900">
+                  <div className="text-[28px] leading-8 font-extrabold text-slate-900 mt-3">
                     {stats ? stats.totalUsers : <span className="text-slate-300 animate-pulse">--</span>}
                   </div>
-                  <p className="text-[11px] text-slate-400 font-medium">Registered accounts</p>
                 </div>
 
                 {/* 2. Total Businesses */}
-                <div className="bg-white rounded-2xl border border-slate-200/90 p-4.5 shadow-xs space-y-2">
-                  <div className="flex items-center justify-between text-slate-500">
-                    <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
-                      Total Businesses
-                    </span>
-                    <div className="w-8 h-8 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
-                      <Building2 className="w-4 h-4" />
+                <div className="bg-white rounded-xl border border-slate-200 p-4 shadow-sm">
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-9 h-9 rounded-full bg-violet-50 text-violet-600 flex items-center justify-center shrink-0">
+                      <Building2 className="w-[18px] h-[18px]" />
                     </div>
+                    <span className="text-xs font-semibold text-slate-500 truncate">Total Businesses</span>
                   </div>
-                  <div className="text-2xl font-black text-slate-900">
+                  <div className="text-[28px] leading-8 font-extrabold text-slate-900 mt-3">
                     {stats ? stats.totalBusinesses : <span className="text-slate-300 animate-pulse">--</span>}
                   </div>
-                  <p className="text-[11px] text-slate-400 font-medium">All directory listings</p>
                 </div>
 
                 {/* 3. Pending */}
-                <div className="bg-white rounded-2xl border border-slate-200/90 p-4.5 shadow-xs space-y-2">
-                  <div className="flex items-center justify-between text-slate-500">
-                    <span className="text-[11px] font-bold uppercase tracking-wider text-amber-600">
-                      Pending
-                    </span>
-                    <div className="w-8 h-8 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center">
-                      <Clock className="w-4 h-4" />
+                <div className="bg-white rounded-xl border border-slate-200 p-4 shadow-sm">
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-9 h-9 rounded-full bg-amber-50 text-amber-600 flex items-center justify-center shrink-0">
+                      <Clock className="w-[18px] h-[18px]" />
                     </div>
+                    <span className="text-xs font-semibold text-slate-500 truncate">Pending</span>
                   </div>
-                  <div className="text-2xl font-black text-amber-600">
+                  <div className="text-[28px] leading-8 font-extrabold text-slate-900 mt-3">
                     {stats ? stats.pendingBusinesses : <span className="text-slate-300 animate-pulse">--</span>}
                   </div>
-                  <p className="text-[11px] text-slate-400 font-medium">Awaiting review</p>
                 </div>
 
                 {/* 4. Approved */}
-                <div className="bg-white rounded-2xl border border-slate-200/90 p-4.5 shadow-xs space-y-2">
-                  <div className="flex items-center justify-between text-slate-500">
-                    <span className="text-[11px] font-bold uppercase tracking-wider text-emerald-600">
-                      Approved
-                    </span>
-                    <div className="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
-                      <CheckCircle2 className="w-4 h-4" />
+                <div className="bg-white rounded-xl border border-slate-200 p-4 shadow-sm">
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-9 h-9 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
+                      <CheckCircle2 className="w-[18px] h-[18px]" />
                     </div>
+                    <span className="text-xs font-semibold text-slate-500 truncate">Approved</span>
                   </div>
-                  <div className="text-2xl font-black text-emerald-600">
+                  <div className="text-[28px] leading-8 font-extrabold text-slate-900 mt-3">
                     {stats ? stats.publishedBusinesses : <span className="text-slate-300 animate-pulse">--</span>}
                   </div>
-                  <p className="text-[11px] text-slate-400 font-medium">Published & live</p>
                 </div>
 
                 {/* 5. Reviews */}
-                <div className="bg-white rounded-2xl border border-slate-200/90 p-4.5 shadow-xs space-y-2 col-span-2 sm:col-span-1 md:col-span-1 lg:col-span-1">
-                  <div className="flex items-center justify-between text-slate-500">
-                    <span className="text-[11px] font-bold uppercase tracking-wider text-purple-600">
-                      Reviews
-                    </span>
-                    <div className="w-8 h-8 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center">
-                      <Star className="w-4 h-4" />
+                <div className="bg-white rounded-xl border border-slate-200 p-4 shadow-sm col-span-2 sm:col-span-1">
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-9 h-9 rounded-full bg-pink-50 text-pink-600 flex items-center justify-center shrink-0">
+                      <Star className="w-[18px] h-[18px]" />
                     </div>
+                    <span className="text-xs font-semibold text-slate-500 truncate">Reviews</span>
                   </div>
-                  <div className="text-2xl font-black text-slate-900">
+                  <div className="text-[28px] leading-8 font-extrabold text-slate-900 mt-3">
                     {stats ? stats.totalReviews : <span className="text-slate-300 animate-pulse">--</span>}
                   </div>
-                  <p className="text-[11px] text-slate-400 font-medium">Customer reviews</p>
                 </div>
               </section>
 
@@ -1559,13 +1593,13 @@ export default function AdminDashboardPage() {
               {/* 7. Emails                                             */}
               {/* 8. Activity                                           */}
               {/* ===================================================== */}
-              <div className="bg-white rounded-3xl border border-slate-200/90 shadow-[0_2px_12px_rgba(0,0,0,0.03)] p-4 sm:p-6 space-y-6">
+              <div className="bg-white rounded-2xl border border-slate-200 shadow-sm px-3 py-3 sm:px-4">
                 {/* Tab Navigation Strip */}
-                <div className="border-b border-slate-100 flex items-center gap-2 sm:gap-4 overflow-x-auto overflow-y-hidden whitespace-nowrap scrollbar-none pb-2 text-xs font-bold w-full max-w-full">
+                <div className="flex items-center gap-1.5 overflow-x-auto whitespace-nowrap scrollbar-none text-[13px] font-semibold w-full max-w-full">
                   {[
                     { id: 'pending' as const, label: 'Pending', count: pendingBusinesses.length },
                     { id: 'all' as const, label: 'All Businesses', count: allBusinesses.length },
-                    { id: 'payments' as const, label: 'Payments', count: 0 },
+                    { id: 'payments' as const, label: 'Payment History', count: null },
                     { id: 'reviews' as const, label: 'Reviews', count: reviews.length },
                     { id: 'claims' as const, label: 'Claim Requests', count: claims.length },
                     { id: 'users' as const, label: 'Users', count: usersList.length },
@@ -1578,17 +1612,17 @@ export default function AdminDashboardPage() {
                         key={tab.id}
                         type="button"
                         onClick={() => setActiveTab(tab.id)}
-                        className={`pb-2.5 px-2 border-b-2 transition-all flex items-center gap-1.5 cursor-pointer shrink-0 min-h-[44px] ${
+                        className={`px-4 py-2.5 rounded-full transition-all flex items-center gap-1.5 cursor-pointer shrink-0 ${
                           isActive
-                            ? 'border-[#1D68F2] text-[#1D68F2]'
-                            : 'border-transparent text-slate-500 hover:text-slate-800'
+                            ? 'bg-[#1D68F2] text-white shadow-sm'
+                            : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
                         }`}
                       >
                         <span>{tab.label}</span>
                         {tab.count !== null && (
                           <span
-                            className={`px-1.5 py-0.2 rounded-full text-[10px] font-bold ${
-                              isActive ? 'bg-[#1D68F2]/10 text-[#1D68F2]' : 'bg-slate-100 text-slate-500'
+                            className={`px-1.5 py-0.5 rounded-full text-[10px] font-bold ${
+                              isActive ? 'bg-white/25 text-white' : 'bg-slate-100 text-slate-500'
                             }`}
                           >
                             {tab.count}
@@ -1598,6 +1632,9 @@ export default function AdminDashboardPage() {
                     );
                   })}
                 </div>
+              </div>
+
+              <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 sm:p-6">
 
                 {/* --------------------------------------------------- */}
                 {/* TAB 1: PENDING                                      */}
@@ -1877,10 +1914,10 @@ export default function AdminDashboardPage() {
                             key={status}
                             type="button"
                             onClick={() => setBusinessStatusFilter(status)}
-                            className={`px-3 py-1.5 rounded-xl text-xs font-bold capitalize transition-all cursor-pointer shrink-0 ${
+                            className={`px-3 py-1.5 rounded-full text-xs font-bold capitalize transition-all cursor-pointer shrink-0 ${
                               businessStatusFilter === status
-                                ? 'bg-slate-900 text-white shadow-xs'
-                                : 'bg-slate-50 text-slate-600 hover:bg-slate-100 border border-slate-200/80'
+                                ? 'bg-[#1D68F2] text-white shadow-sm'
+                                : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-50'
                             }`}
                           >
                             {status}
@@ -3078,7 +3115,7 @@ export default function AdminDashboardPage() {
                         </div>
 
                         {/* SMTP Gateway Overview Card */}
-                        <div className="bg-slate-50/70 border border-slate-200/90 rounded-2xl p-5 space-y-4">
+                        <div className="bg-white border border-slate-200 rounded-2xl p-5 space-y-4 shadow-sm">
                           <div className="flex items-center justify-between">
                             <div className="flex items-center gap-2.5">
                               <div className="w-8 h-8 rounded-xl bg-blue-100 text-blue-700 flex items-center justify-center">
@@ -3353,7 +3390,7 @@ export default function AdminDashboardPage() {
           {activeSection === 'reports' && (
             <div className="space-y-6">
               {/* Header Card with Refetch Button */}
-              <div className="bg-white rounded-3xl border border-slate-200/90 shadow-[0_2px_12px_rgba(0,0,0,0.03)] p-5 sm:p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div className="bg-white rounded-2xl border border-slate-200/90 shadow-sm p-5 sm:p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
                   <h3 className="font-bold text-base text-slate-900 flex items-center gap-2">
                     <BarChart3 className="w-5 h-5 text-[#1D68F2]" />
@@ -3375,12 +3412,12 @@ export default function AdminDashboardPage() {
               </div>
 
               {reportsLoading && !reportsData ? (
-                <div className="bg-white rounded-3xl border border-slate-200/90 p-12 text-center text-xs text-slate-500 space-y-3">
+                <div className="bg-white rounded-2xl border border-slate-200/90 p-12 text-center text-xs text-slate-500 space-y-3">
                   <Loader2 className="w-8 h-8 text-[#1D68F2] animate-spin mx-auto" />
                   <p className="font-semibold text-slate-700">Calculating directory aggregates...</p>
                 </div>
               ) : !reportsData ? (
-                <div className="bg-white rounded-3xl border border-slate-200/90 p-12 text-center text-xs text-slate-500">
+                <div className="bg-white rounded-2xl border border-slate-200/90 p-12 text-center text-xs text-slate-500">
                   No reporting data loaded. Click Refetch Reports above.
                 </div>
               ) : (
@@ -3426,7 +3463,7 @@ export default function AdminDashboardPage() {
                   </div>
 
                   {/* Block 2: Category Distribution (Plain CSS Bars) */}
-                  <div className="bg-white rounded-3xl border border-slate-200/90 shadow-[0_2px_12px_rgba(0,0,0,0.03)] p-5 sm:p-6 space-y-4">
+                  <div className="bg-white rounded-2xl border border-slate-200/90 shadow-sm p-5 sm:p-6 space-y-4">
                     <div className="border-b border-slate-100 pb-3 flex items-center justify-between">
                       <div>
                         <h4 className="font-bold text-sm text-slate-900">Businesses by Category</h4>
@@ -3473,7 +3510,7 @@ export default function AdminDashboardPage() {
                   {/* Block 3: Geographic Distribution (Country & Cities) */}
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     {/* Businesses by Country */}
-                    <div className="bg-white rounded-3xl border border-slate-200/90 shadow-[0_2px_12px_rgba(0,0,0,0.03)] p-5 sm:p-6 space-y-4">
+                    <div className="bg-white rounded-2xl border border-slate-200/90 shadow-sm p-5 sm:p-6 space-y-4">
                       <div className="border-b border-slate-100 pb-3 flex items-center justify-between">
                         <div>
                           <h4 className="font-bold text-sm text-slate-900">Businesses by Country</h4>
@@ -3516,7 +3553,7 @@ export default function AdminDashboardPage() {
                     </div>
 
                     {/* Top Cities */}
-                    <div className="bg-white rounded-3xl border border-slate-200/90 shadow-[0_2px_12px_rgba(0,0,0,0.03)] p-5 sm:p-6 space-y-4">
+                    <div className="bg-white rounded-2xl border border-slate-200/90 shadow-sm p-5 sm:p-6 space-y-4">
                       <div className="border-b border-slate-100 pb-3 flex items-center justify-between">
                         <div>
                           <h4 className="font-bold text-sm text-slate-900">Top Cities</h4>
@@ -3563,7 +3600,7 @@ export default function AdminDashboardPage() {
                   {/* Block 4: Month Tables (Last 12 Months) */}
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     {/* Businesses by Month */}
-                    <div className="bg-white rounded-3xl border border-slate-200/90 shadow-[0_2px_12px_rgba(0,0,0,0.03)] p-5 sm:p-6 space-y-4">
+                    <div className="bg-white rounded-2xl border border-slate-200/90 shadow-sm p-5 sm:p-6 space-y-4">
                       <div className="border-b border-slate-100 pb-3">
                         <h4 className="font-bold text-sm text-slate-900">Businesses Added by Month</h4>
                         <p className="text-xs text-slate-500 mt-0.5">Directory listings created in the last 12 months.</p>
@@ -3580,15 +3617,27 @@ export default function AdminDashboardPage() {
                               <tr>
                                 <th className="px-3 py-2.5">Month</th>
                                 <th className="px-3 py-2.5 text-right">Listings Created</th>
+                                <th className="px-3 py-2.5">Distribution</th>
                               </tr>
                             </thead>
                             <tbody className="divide-y divide-slate-100">
-                              {reportsData.businessesByMonth.map((row) => (
-                                <tr key={row.month} className="hover:bg-slate-50/60 transition-colors">
-                                  <td className="px-3 py-2 font-mono font-bold text-slate-800">{row.month}</td>
-                                  <td className="px-3 py-2 text-right font-mono text-slate-700">+{row.count}</td>
-                                </tr>
-                              ))}
+                              {(() => {
+                                const maxCount = Math.max(...reportsData.businessesByMonth.map((r) => r.count), 1);
+                                return reportsData.businessesByMonth.map((row) => (
+                                  <tr key={row.month} className="hover:bg-slate-50/60 transition-colors">
+                                    <td className="px-3 py-2 font-mono font-bold text-slate-800">{row.month}</td>
+                                    <td className="px-3 py-2 text-right font-mono text-slate-700">+{row.count}</td>
+                                    <td className="px-3 py-2">
+                                      <div className="w-full min-w-[80px] bg-slate-100 rounded-full h-2 overflow-hidden">
+                                        <div
+                                          className="bg-[#1D68F2] h-full rounded-full transition-all duration-300"
+                                          style={{ width: `${Math.min(100, Math.round((row.count / maxCount) * 100))}%` }}
+                                        />
+                                      </div>
+                                    </td>
+                                  </tr>
+                                ));
+                              })()}
                             </tbody>
                           </table>
                         </div>
@@ -3596,7 +3645,7 @@ export default function AdminDashboardPage() {
                     </div>
 
                     {/* Users by Month */}
-                    <div className="bg-white rounded-3xl border border-slate-200/90 shadow-[0_2px_12px_rgba(0,0,0,0.03)] p-5 sm:p-6 space-y-4">
+                    <div className="bg-white rounded-2xl border border-slate-200/90 shadow-sm p-5 sm:p-6 space-y-4">
                       <div className="border-b border-slate-100 pb-3">
                         <h4 className="font-bold text-sm text-slate-900">User Registrations by Month</h4>
                         <p className="text-xs text-slate-500 mt-0.5">New user accounts registered in the last 12 months.</p>
@@ -3613,15 +3662,27 @@ export default function AdminDashboardPage() {
                               <tr>
                                 <th className="px-3 py-2.5">Month</th>
                                 <th className="px-3 py-2.5 text-right">Accounts Created</th>
+                                <th className="px-3 py-2.5">Distribution</th>
                               </tr>
                             </thead>
                             <tbody className="divide-y divide-slate-100">
-                              {reportsData.usersByMonth.map((row) => (
-                                <tr key={row.month} className="hover:bg-slate-50/60 transition-colors">
-                                  <td className="px-3 py-2 font-mono font-bold text-slate-800">{row.month}</td>
-                                  <td className="px-3 py-2 text-right font-mono text-slate-700">+{row.count}</td>
-                                </tr>
-                              ))}
+                              {(() => {
+                                const maxCount = Math.max(...reportsData.usersByMonth.map((r) => r.count), 1);
+                                return reportsData.usersByMonth.map((row) => (
+                                  <tr key={row.month} className="hover:bg-slate-50/60 transition-colors">
+                                    <td className="px-3 py-2 font-mono font-bold text-slate-800">{row.month}</td>
+                                    <td className="px-3 py-2 text-right font-mono text-slate-700">+{row.count}</td>
+                                    <td className="px-3 py-2">
+                                      <div className="w-full min-w-[80px] bg-slate-100 rounded-full h-2 overflow-hidden">
+                                        <div
+                                          className="bg-emerald-500 h-full rounded-full transition-all duration-300"
+                                          style={{ width: `${Math.min(100, Math.round((row.count / maxCount) * 100))}%` }}
+                                        />
+                                      </div>
+                                    </td>
+                                  </tr>
+                                ));
+                              })()}
                             </tbody>
                           </table>
                         </div>
@@ -3630,7 +3691,7 @@ export default function AdminDashboardPage() {
                   </div>
 
                   {/* Block 5: Pending Aging Analysis */}
-                  <div className="bg-white rounded-3xl border border-slate-200/90 shadow-[0_2px_12px_rgba(0,0,0,0.03)] p-5 sm:p-6 space-y-4">
+                  <div className="bg-white rounded-2xl border border-slate-200/90 shadow-sm p-5 sm:p-6 space-y-4">
                     <div className="border-b border-slate-100 pb-3 flex items-center justify-between">
                       <div>
                         <h4 className="font-bold text-sm text-slate-900">Pending Listings Aging Analysis</h4>
@@ -3675,7 +3736,7 @@ export default function AdminDashboardPage() {
                   {/* Block 6: Payments Summary & Reviews Summary */}
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     {/* Payments Summary */}
-                    <div className="bg-white rounded-3xl border border-slate-200/90 shadow-[0_2px_12px_rgba(0,0,0,0.03)] p-5 sm:p-6 space-y-4">
+                    <div className="bg-white rounded-2xl border border-slate-200/90 shadow-sm p-5 sm:p-6 space-y-4">
                       <div className="border-b border-slate-100 pb-3 flex items-center justify-between">
                         <div>
                           <h4 className="font-bold text-sm text-slate-900">Payments &amp; Revenue Summary</h4>
@@ -3714,7 +3775,7 @@ export default function AdminDashboardPage() {
                     </div>
 
                     {/* Customer Reviews Summary */}
-                    <div className="bg-white rounded-3xl border border-slate-200/90 shadow-[0_2px_12px_rgba(0,0,0,0.03)] p-5 sm:p-6 space-y-4">
+                    <div className="bg-white rounded-2xl border border-slate-200/90 shadow-sm p-5 sm:p-6 space-y-4">
                       <div className="border-b border-slate-100 pb-3 flex items-center justify-between">
                         <div>
                           <h4 className="font-bold text-sm text-slate-900">Customer Reviews Summary</h4>
@@ -3766,9 +3827,9 @@ export default function AdminDashboardPage() {
           {activeSection === 'settings' && (
             <div className="space-y-6">
               {/* Header Card */}
-              <div className="bg-white rounded-3xl border border-slate-200/90 shadow-[0_2px_12px_rgba(0,0,0,0.03)] p-5 sm:p-6">
+              <div className="bg-white rounded-2xl border border-slate-200/90 shadow-sm p-5 sm:p-6">
                 <h3 className="font-bold text-base text-slate-900 flex items-center gap-2">
-                  <Settings className="w-5 h-5 text-indigo-600" />
+                  <Settings className="w-5 h-5 text-[#1D68F2]" />
                   <span>Platform &amp; Governance Settings</span>
                 </h3>
                 <p className="text-xs text-slate-500 mt-0.5">
@@ -3777,7 +3838,7 @@ export default function AdminDashboardPage() {
               </div>
 
               {settingsLoading && !settingsData ? (
-                <div className="bg-white rounded-3xl border border-slate-200/90 p-12 text-center text-xs text-slate-500 space-y-3">
+                <div className="bg-white rounded-2xl border border-slate-200/90 p-12 text-center text-xs text-slate-500 space-y-3">
                   <Loader2 className="w-8 h-8 text-[#1D68F2] animate-spin mx-auto" />
                   <p className="font-semibold text-slate-700">Loading system settings...</p>
                 </div>
@@ -3786,7 +3847,7 @@ export default function AdminDashboardPage() {
                   {/* Setting 1: Owner Notification Email */}
                   <form
                     onSubmit={handleSaveNotificationEmail}
-                    className="bg-white rounded-3xl border border-slate-200/90 shadow-[0_2px_12px_rgba(0,0,0,0.03)] p-5 sm:p-6 space-y-4"
+                    className="bg-white rounded-2xl border border-slate-200/90 shadow-sm p-5 sm:p-6 space-y-4"
                   >
                     <div className="border-b border-slate-100 pb-3">
                       <h4 className="font-bold text-sm text-slate-900 flex items-center gap-2">
@@ -3830,7 +3891,7 @@ export default function AdminDashboardPage() {
                   {/* Setting 2: Payment & Listing Fee Settings */}
                   <form
                     onSubmit={handleSavePaymentSettings}
-                    className="bg-white rounded-3xl border border-slate-200/90 shadow-[0_2px_12px_rgba(0,0,0,0.03)] p-5 sm:p-6 space-y-4"
+                    className="bg-white rounded-2xl border border-slate-200/90 shadow-sm p-5 sm:p-6 space-y-4"
                   >
                     <div className="border-b border-slate-100 pb-3">
                       <h4 className="font-bold text-sm text-slate-900 flex items-center gap-2">
@@ -3909,7 +3970,7 @@ export default function AdminDashboardPage() {
                       <button
                         type="submit"
                         disabled={savingPaymentSetting}
-                        className="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-xs transition-colors flex items-center gap-2 cursor-pointer disabled:opacity-50"
+                        className="px-5 py-2.5 rounded-xl bg-[#1D68F2] hover:bg-[#1557D0] text-white font-bold text-xs shadow-sm transition-colors flex items-center gap-2 cursor-pointer disabled:opacity-50"
                       >
                         {savingPaymentSetting && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
                         <span>Save Payment Settings</span>
@@ -3921,7 +3982,7 @@ export default function AdminDashboardPage() {
                   <PaymentSettingsManager />
 
                   {/* Setting 3: System Backup */}
-                  <div className="bg-white rounded-3xl border border-slate-200/90 shadow-[0_2px_12px_rgba(0,0,0,0.03)] p-5 sm:p-6 space-y-4">
+                  <div className="bg-white rounded-2xl border border-slate-200/90 shadow-sm p-5 sm:p-6 space-y-4">
                     <div className="border-b border-slate-100 pb-3 flex items-center justify-between">
                       <div>
                         <h4 className="font-bold text-sm text-slate-900 flex items-center gap-2">
@@ -3934,10 +3995,10 @@ export default function AdminDashboardPage() {
                       </div>
                     </div>
 
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-2xl bg-indigo-50/50 border border-indigo-100">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-2xl bg-blue-50/60 border border-blue-100">
                       <div>
-                        <span className="font-bold text-xs text-indigo-950 block">One-Click Platform Backup</span>
-                        <p className="text-[11px] text-indigo-800/80 mt-0.5">
+                        <span className="font-bold text-xs text-blue-950 block">One-Click Platform Backup</span>
+                        <p className="text-[11px] text-blue-800/80 mt-0.5">
                           Generates a sanitized snapshot omitting user password hashes and authentication tokens.
                         </p>
                       </div>
@@ -3945,7 +4006,7 @@ export default function AdminDashboardPage() {
                         type="button"
                         onClick={handleDownloadBackup}
                         disabled={isDownloadingBackup}
-                        className="px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs shadow-xs transition-colors flex items-center gap-2 cursor-pointer disabled:opacity-50 shrink-0"
+                        className="px-4 py-2.5 rounded-xl bg-[#1D68F2] hover:bg-[#1557D0] text-white font-bold text-xs shadow-sm transition-colors flex items-center gap-2 cursor-pointer disabled:opacity-50 shrink-0"
                       >
                         {isDownloadingBackup ? (
                           <Loader2 className="w-3.5 h-3.5 animate-spin" />
@@ -3958,7 +4019,7 @@ export default function AdminDashboardPage() {
                   </div>
 
                   {/* Setting 4: Quick Navigation to Governance Tools */}
-                  <div className="bg-white rounded-3xl border border-slate-200/90 shadow-[0_2px_12px_rgba(0,0,0,0.03)] p-5 sm:p-6 space-y-4">
+                  <div className="bg-white rounded-2xl border border-slate-200/90 shadow-sm p-5 sm:p-6 space-y-4">
                     <div className="border-b border-slate-100 pb-3">
                       <h4 className="font-bold text-sm text-slate-900">Governance &amp; Diagnostic Shortcuts</h4>
                       <p className="text-xs text-slate-500 mt-0.5">Direct links to operational management panels.</p>
@@ -4008,7 +4069,7 @@ export default function AdminDashboardPage() {
                   </div>
 
                   {/* Setting 5: Sign Out Session */}
-                  <div className="bg-white rounded-3xl border border-slate-200/90 shadow-[0_2px_12px_rgba(0,0,0,0.03)] p-5 sm:p-6 space-y-4">
+                  <div className="bg-white rounded-2xl border border-slate-200/90 shadow-sm p-5 sm:p-6 space-y-4">
                     <div className="border-b border-slate-100 pb-3 flex items-center justify-between">
                       <div>
                         <h4 className="font-bold text-sm text-slate-900">Administrator Session</h4>
@@ -4044,6 +4105,7 @@ export default function AdminDashboardPage() {
           )}
         </div>
       </div>
+      </div>
 
       {/* ======================================================= */}
       {/* MAKE ADMIN CONFIRMATION MODAL                           */}
@@ -4060,7 +4122,7 @@ export default function AdminDashboardPage() {
           <div
             role="dialog"
             aria-modal="true"
-            className="bg-white rounded-3xl max-w-md w-full border border-slate-200 shadow-2xl p-6 sm:p-7 space-y-5 max-h-[90vh] overflow-y-auto"
+            className="bg-white rounded-2xl max-w-md w-full border border-slate-200 shadow-2xl p-6 sm:p-7 space-y-5 max-h-[90vh] overflow-y-auto"
           >
             <div className="flex items-start gap-4">
               <div className="w-12 h-12 rounded-2xl bg-amber-100 text-amber-600 flex items-center justify-center shrink-0">
@@ -4126,7 +4188,7 @@ export default function AdminDashboardPage() {
           <div
             role="dialog"
             aria-modal="true"
-            className="bg-white rounded-3xl max-w-md w-full border border-slate-200 shadow-2xl p-6 sm:p-7 space-y-5 max-h-[90vh] overflow-y-auto"
+            className="bg-white rounded-2xl max-w-md w-full border border-slate-200 shadow-2xl p-6 sm:p-7 space-y-5 max-h-[90vh] overflow-y-auto"
           >
             <div className="flex items-start gap-4">
               <div className="w-12 h-12 rounded-2xl bg-rose-100 text-rose-600 flex items-center justify-center shrink-0">
@@ -4223,7 +4285,7 @@ export default function AdminDashboardPage() {
           <div
             role="dialog"
             aria-modal="true"
-            className="bg-white rounded-3xl max-w-md w-full border border-slate-200 shadow-2xl p-6 sm:p-7 space-y-5 max-h-[90vh] overflow-y-auto"
+            className="bg-white rounded-2xl max-w-md w-full border border-slate-200 shadow-2xl p-6 sm:p-7 space-y-5 max-h-[90vh] overflow-y-auto"
           >
             <div className="flex items-start gap-4">
               <div className="w-12 h-12 rounded-2xl bg-amber-100 text-amber-600 flex items-center justify-center shrink-0">
@@ -4309,7 +4371,7 @@ export default function AdminDashboardPage() {
       {/* ======================================================= */}
       {isMobileDrawerOpen && (
         <div
-          className="fixed inset-0 z-50 flex bg-slate-900/50 backdrop-blur-xs md:hidden animate-in fade-in duration-150"
+          className="fixed inset-0 z-50 flex bg-slate-900/50 backdrop-blur-xs lg:hidden animate-in fade-in duration-150"
           onClick={(e) => {
             if (e.target === e.currentTarget) {
               setIsMobileDrawerOpen(false);
@@ -4326,12 +4388,12 @@ export default function AdminDashboardPage() {
               {/* Drawer Header */}
               <div className="flex items-center justify-between pb-3 border-b border-slate-100">
                 <div className="flex items-center gap-2.5">
-                  <div className="w-9 h-9 rounded-xl bg-indigo-50 text-indigo-600 border border-indigo-100 flex items-center justify-center shrink-0">
-                    <Shield className="w-4 h-4" />
+                  <div className="w-9 h-9 rounded-xl bg-[#1D68F2] text-white flex items-center justify-center shrink-0 shadow-sm">
+                    <Store className="w-4 h-4" />
                   </div>
                   <div>
-                    <h2 className="text-sm font-bold text-slate-900">Admin Portal</h2>
-                    <p className="text-[11px] text-slate-400 font-medium">Directory Governance</p>
+                    <h2 className="text-sm font-bold text-slate-900">BizListPlace</h2>
+                    <p className="text-[11px] text-slate-400 font-medium">Business Directory</p>
                   </div>
                 </div>
                 <button
@@ -4349,19 +4411,29 @@ export default function AdminDashboardPage() {
                 {SIDEBAR_NAV_ITEMS.map((item) => {
                   const Icon = item.icon;
                   const isActive = activeSection === item.id;
+                  const badgeCount = item.id === 'reviews' ? reviews.length : null;
                   return (
                     <button
                       key={item.id}
                       type="button"
                       onClick={() => handleSidebarClick(item.id)}
-                      className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-bold transition-all text-left cursor-pointer min-h-[44px] ${
+                      className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] font-semibold transition-all text-left cursor-pointer min-h-[44px] ${
                         isActive
-                          ? 'bg-indigo-50 text-indigo-700 shadow-xs'
+                          ? 'bg-[#EBF2FE] text-[#1D68F2] shadow-xs'
                           : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
                       }`}
                     >
-                      <Icon className={`w-4 h-4 shrink-0 ${isActive ? 'text-indigo-600' : 'text-slate-400'}`} />
-                      <span className="truncate">{item.label}</span>
+                      <Icon className={`w-4 h-4 shrink-0 ${isActive ? 'text-[#1D68F2]' : 'text-slate-400'}`} />
+                      <span className="truncate flex-1">{item.label}</span>
+                      {badgeCount !== null && (
+                        <span
+                          className={`px-2 py-0.5 rounded-full text-[11px] font-bold shrink-0 ${
+                            isActive ? 'bg-[#1D68F2] text-white' : 'bg-slate-100 text-slate-500'
+                          }`}
+                        >
+                          {badgeCount}
+                        </span>
+                      )}
                     </button>
                   );
                 })}
@@ -4400,11 +4472,11 @@ export default function AdminDashboardPage() {
       )}
 
       {/* ======================================================= */}
-      {/* MOBILE BOTTOM TAB BAR (under 768px, md:hidden)          */}
+      {/* MOBILE BOTTOM TAB BAR (under 1024px, lg:hidden)          */}
       {/* ======================================================= */}
       <nav
         aria-label="Mobile bottom navigation"
-        className="fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-200 py-1.5 px-2 flex items-center justify-around md:hidden shadow-[0_-4px_16px_rgba(0,0,0,0.06)]"
+        className="fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-200 py-1.5 px-2 flex items-center justify-around lg:hidden shadow-[0_-4px_16px_rgba(0,0,0,0.06)]"
       >
         {/* 1. Dashboard */}
         <button
@@ -4476,7 +4548,7 @@ export default function AdminDashboardPage() {
       {/* ======================================================= */}
       {isMoreSheetOpen && (
         <div
-          className="fixed inset-0 z-50 flex items-end bg-slate-900/50 backdrop-blur-xs md:hidden animate-in fade-in duration-150"
+          className="fixed inset-0 z-50 flex items-end bg-slate-900/50 backdrop-blur-xs lg:hidden animate-in fade-in duration-150"
           onClick={(e) => {
             if (e.target === e.currentTarget) {
               setIsMoreSheetOpen(false);
@@ -4487,12 +4559,12 @@ export default function AdminDashboardPage() {
             role="dialog"
             aria-modal="true"
             aria-label="More navigation options"
-            className="w-full bg-white rounded-t-3xl border-t border-slate-200 shadow-2xl p-5 max-h-[80vh] overflow-y-auto animate-in slide-in-from-bottom duration-200 space-y-4"
+            className="w-full bg-white rounded-t-2xl border-t border-slate-200 shadow-2xl p-5 max-h-[80vh] overflow-y-auto animate-in slide-in-from-bottom duration-200 space-y-4"
           >
             {/* Sheet Handle & Header */}
             <div className="flex items-center justify-between pb-3 border-b border-slate-100">
               <div className="flex items-center gap-2">
-                <span className="w-1.5 h-1.5 rounded-full bg-indigo-600" />
+                <span className="w-1.5 h-1.5 rounded-full bg-[#1D68F2]" />
                 <h3 className="text-sm font-bold text-slate-900">More Administrative Sections</h3>
               </div>
               <button
@@ -4510,7 +4582,7 @@ export default function AdminDashboardPage() {
               {[
                 { id: 'users' as const, label: 'Users', icon: Users },
                 { id: 'reviews' as const, label: 'Reviews', icon: Star },
-                { id: 'claims' as const, label: 'Claims', icon: FileCheck2 },
+                { id: 'claims' as const, label: 'Claim Requests', icon: FileCheck2 },
                 { id: 'emails' as const, label: 'Emails', icon: Mail },
                 { id: 'activity' as const, label: 'Activity', icon: History },
                 { id: 'reports' as const, label: 'Reports', icon: BarChart3 },
@@ -4525,11 +4597,11 @@ export default function AdminDashboardPage() {
                     onClick={() => handleSidebarClick(item.id)}
                     className={`flex items-center gap-2.5 p-3 rounded-2xl text-xs font-bold transition-all text-left min-h-[44px] cursor-pointer ${
                       isActive
-                        ? 'bg-indigo-50 text-indigo-700 border border-indigo-200/80'
+                        ? 'bg-[#EBF2FE] text-[#1D68F2] border border-blue-200/80'
                         : 'bg-slate-50 text-slate-700 hover:bg-slate-100 border border-slate-200/60'
                     }`}
                   >
-                    <Icon className={`w-4 h-4 shrink-0 ${isActive ? 'text-indigo-600' : 'text-slate-500'}`} />
+                    <Icon className={`w-4 h-4 shrink-0 ${isActive ? 'text-[#1D68F2]' : 'text-slate-500'}`} />
                     <span className="truncate">{item.label}</span>
                   </button>
                 );
